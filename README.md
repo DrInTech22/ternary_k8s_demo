@@ -1,0 +1,1 @@
+# ternary_k8s_demo
