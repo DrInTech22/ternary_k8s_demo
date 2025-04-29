@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shippingservice
+  namespace: team-platform
+  labels:
+    app.kubernetes.io/name: shippingservice
+    company.com/env: production
+    company.com/team: platform
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: shippingservice
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: shippingservice
+        company.com/env: production
+        company.com/team: platform
+    spec:
+      containers:
+      - name: server
+        image: maestrops/shippingservice:2-7df2473
+        ports:
+        - containerPort: 50051
+        env:
+        - name: PORT
+          value: "50051"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 50051
+        livenessProbe:
+          grpc:
+            port: 50051
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shippingservice
+  namespace: team-platform
+  labels:
+    app.kubernetes.io/name: shippingservice
+    company.com/env: production
+    company.com/team: platform
+spec:
+  type: ClusterIP
+  selector:
+    aapp.kubernetes.io/name: shippingservice
+  ports:
+  - name: grpc
+    port: 50051
+    targetPort: 50051

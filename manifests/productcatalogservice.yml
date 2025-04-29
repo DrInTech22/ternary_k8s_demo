@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productcatalogservice
+  namespace: team-ecommerce
+  labels:
+    app.kubernetes.io/name: productcatalogservice
+    company.com/env: production
+    company.com/team: ecommerce
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: productcatalogservice
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: productcatalogservice
+        company.com/env: production
+        company.com/team: ecommerce
+    spec:
+      containers:
+      - name: server
+        image: maestrops/productcatalogservice:2-7df2473
+        ports:
+        - containerPort: 3550
+        env:
+        - name: PORT
+          value: "3550"
+        readinessProbe:
+          grpc:
+            port: 3550
+        livenessProbe:
+          grpc:
+            port: 3550
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productcatalogservice
+  namespace: team-ecommerce
+  labels:
+    app.kubernetes.io/name: productcatalogservice
+    company.com/env: production
+    company.com/team: ecommerce
+spec:
+  type: ClusterIP
+  selector:
+    aapp.kubernetes.io/name: productcatalogservice
+  ports:
+  - name: grpc
+    port: 3550
+    targetPort: 3550
