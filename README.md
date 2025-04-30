@@ -137,9 +137,9 @@ aws cloudformation create-stack \
     ParameterKey=CurBucketArnParameter,ParameterValue=arn:aws:s3:::ternary-demo-bucket \
     ParameterKey=ServiceAccountParameter,ParameterValue=ternary-service-account@yourproject.iam.gserviceaccount.com \
     ParameterKey=ServiceAccountUniqueIDParameter,ParameterValue=123456789012345678901
-
 ```
 
+- 
 
 
 
